@@ -2,7 +2,7 @@ from io import StringIO
 from typing import AsyncGenerator
 from .report_request import ReportRequest
 from .report_status_response import ReportStatusResponse, ReportStatus
-from src.awardco.awardco_session import AwardcoSession
+from awardco.awardco_session import AwardcoSession
 import pandas as pd
 import asyncio
 import math
