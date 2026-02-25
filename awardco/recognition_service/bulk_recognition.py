@@ -20,18 +20,18 @@ class BulkRecognition:
 
     def as_dict(self) -> dict[str, str]:
         return {
-            "Recognition Date (ISO 8601)": self.recognition_date.isoformat(),
-            "From User": self.from_user,
-            "To User": self.to_user,
+            "Recognition Date (ISO 8601)": self.recognition_date.replace(microsecond=0).isoformat(),
+            "From User (Employee Id/Email)": self.from_user,
+            "To User (Employee Id/Email)": self.to_user,
             "Note": self.note,
             "Tags": ";".join(self.tags),
             "Year": str(self.year) if self.year else "",
             "Amount (Currency)": self.amount,
             "Budget Name": self.budget_name,
             "Public/Private": "Private" if self.is_private else "Public",
-            "Email template": self.email_template,
+            "Email Template": self.email_template,
             "Program Name": self.program_name,
             "Notify Manager (Employee Id/Email)": self.notify_manager,
-            "Notify Date (ISO 8601)": self.notify_date.isoformat() if self.notify_date else '',
+            "Notify Date (ISO 8601)": self.notify_date.replace(microsecond=0).isoformat() if self.notify_date else '',
             "Notify Email Template": self.notify_email_template,
         }

@@ -16,10 +16,14 @@ async def raise_on_error(res: httpx.Response):
         raise err
 
 async def log_request(request: httpx.Request):
+    await request.aread()
     logging.info(f"Request URL: {request.method}: {request.url}")
     body = request.content.decode()
-    if body != '':
-        logging.info(f"Request body: {json.dumps(json.loads(body), indent=2)}")
+    if body:
+        try:
+            logging.info(f"Request body: {json.dumps(json.loads(body), indent=2)}")
+        except json.decoder.JSONDecodeError:
+            logging.info(f'Request body: {body}')
 
 async def log_response(res: httpx.Response):
     await res.aread()

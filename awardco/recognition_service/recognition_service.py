@@ -15,5 +15,6 @@ class RecognitionService:
         keys = list(recognitions[0].as_dict().keys())
         csv_contents = StringIO()
         writer = DictWriter(csv_contents, fieldnames=keys)
+        writer.writeheader()
         writer.writerows([r.as_dict() for r in recognitions])
-        res = await self.session.post('bulk-recognize/upload', data={'file': csv_contents.getvalue()})
+        await self.session.post('bulk-recognize/upload', files={'file': ('bulk-recognitions.csv', csv_contents.getvalue(), 'text/csv')})
