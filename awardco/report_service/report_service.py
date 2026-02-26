@@ -6,7 +6,7 @@ from awardco.awardco_session import AwardcoSession
 import pandas as pd
 import asyncio
 import math
-
+import json
 class ReportService:
     def __init__(self, session: AwardcoSession):
         self.session = session

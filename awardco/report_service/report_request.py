@@ -40,12 +40,6 @@ class ReportRequest:
     timezone: Timezone = None
     timeRangeDateColumns: list[str] | None = None  # TODO: TEST THIS
 
-    def __post_init__(self):
-        if self.selectedFilters is None:
-            self.selectedFilters = ReportFilters()
-        if self.timezone is None:
-            self.timezone = Timezone.UTC
-
     def as_dict(self):
         filters = self.selectedFilters.filters
         from_metadata_filters = self.selectedFilters.fromMetadataFilters
@@ -60,12 +54,15 @@ class ReportRequest:
         if to_metadata_filters is not None:
             filters_dict['To Metadata'] = to_metadata_filters
 
-        return {
+        request = {
             'reportId': self.reportId.value,
-            'startDate': self.startDate,
-            'endDate': self.endDate,
-            'selectedColumns': self.selectedColumns,
+            'startDate': self.startDate.isoformat() if self.startDate else '',
+            'endDate': self.endDate.isoformat() if self.endDate else '',
+            'selectedColumns': self.selectedColumns if self.selectedColumns else [],
             'selectedFilters': filters_dict,
-            'timezone': self.timezone.value,
-            'timeRangeOption': None if self.timeRangeOption is None else self.timeRangeOption.value
+            'timezone': self.timezone.value if self.timezone else Timezone.UTC.value,
+            'timeRangeOption': self.timeRangeOption.value if self.timeRangeOption is not None else ''
         }
+        request = {k:v for k, v in request.items() if v != ''}
+
+        return request
