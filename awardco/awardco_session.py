@@ -1,9 +1,6 @@
 import json
 import logging
-
 import httpx
-from typing import Callable, Any
-
 from httpx import HTTPStatusError
 
 
