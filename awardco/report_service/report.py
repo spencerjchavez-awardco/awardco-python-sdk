@@ -12,7 +12,7 @@ class Report:
         self._total_pages = total_pages
         self._awardco_session = awardco_session
 
-    async def iter_rows_async(self) -> AsyncGenerator[dict[str, str], None]:
+    async def iter_rows(self) -> AsyncGenerator[dict[str, str], None]:
         async def get_report_page_as_csv(url, page) -> str:
             res = await self._awardco_session.get(url, params={'page': page})
             assert res.headers['content-type'] == 'text/csv', 'Report required to be in CSV format.'
@@ -25,8 +25,8 @@ class Report:
             for row in reader:
                 yield row
 
-    async def all_rows_async(self) -> list[dict[str,str]]:
+    async def all_rows(self) -> list[dict[str,str]]:
         rows = []
-        async for row in self.iter_rows_async():
+        async for row in self.iter_rows():
             rows.append(row)
         return rows
