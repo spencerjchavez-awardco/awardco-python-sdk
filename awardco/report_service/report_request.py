@@ -54,10 +54,14 @@ class ReportRequest:
         if to_metadata_filters is not None:
             filters_dict['To Metadata'] = to_metadata_filters
 
+        # Remove microseconds from startDate and endDate if present
+        start_date = self.startDate.replace(microsecond=0) if self.startDate else None
+        end_date = self.endDate.replace(microsecond=0) if self.endDate else None
+
         request = {
             'reportId': self.reportId.value,
-            'startDate': self.startDate.isoformat() if self.startDate else '',
-            'endDate': self.endDate.isoformat() if self.endDate else '',
+            'startDate': start_date.isoformat() if start_date else '',
+            'endDate': end_date.isoformat() if end_date else '',
             'selectedColumns': self.selectedColumns if self.selectedColumns else [],
             'selectedFilters': filters_dict,
             'timezone': self.timezone.value if self.timezone else Timezone.UTC.value,
