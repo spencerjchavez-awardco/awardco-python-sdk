@@ -24,7 +24,7 @@ class ReportService:
         status_res = None
         status: ReportStatus = ReportStatus.IN_PROGRESS
         i = 0
-        total_wait_time = 0
+        total_wait_time = 0.0
         while status == ReportStatus.IN_PROGRESS:
             if total_wait_time >= max_wait_time_secs:
                 raise Exception(f'Report failed to generate after {total_wait_time} seconds')
@@ -50,5 +50,5 @@ class ReportService:
         report_status = await self._queue_and_await_report_completion(report_request, max_wait_time_secs, True)
         download_url = report_status.paginatedApiBaseUrl
         total_pages = report_status.totalPages
-        assert download_url and total_pages > 0
+        assert download_url and total_pages is not None and total_pages > 0
         return Report(download_url, total_pages, self._session)

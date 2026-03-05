@@ -26,7 +26,7 @@ class BulkRecognition:
             "Note": self.note,
             "Tags": ";".join(self.tags),
             "Year": str(self.year) if self.year else "",
-            "Amount (Currency)": self.amount,
+            "Amount (Currency)": str(self.amount),
             "Budget Name": self.budget_name,
             "Public/Private": "Private" if self.is_private else "Public",
             "Email Template": self.email_template,

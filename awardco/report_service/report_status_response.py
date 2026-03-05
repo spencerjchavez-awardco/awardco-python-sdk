@@ -19,10 +19,12 @@ class ReportStatusResponse:
 
     @classmethod
     def from_dict(cls, data: dict):
-        kwargs = {}
-        for f in fields(cls):
-            value = data.get(f.name)
-            if f.name == 'status' and value is not None:
-                value = ReportStatus(value)
-            kwargs[f.name] = value
-        return cls(**kwargs)
+        return cls(
+            status=ReportStatus(data['status']),
+            taskId=int(data['taskId']),
+            errorCode=str(data['errorCode']) if data.get('errorCode') is not None else None,
+            message=str(data['message']) if data.get('message') is not None else None,
+            paginatedApiBaseUrl=str(data['paginatedApiBaseUrl']) if data.get('paginatedApiBaseUrl') is not None else None,
+            totalPages=int(data['totalPages']) if data.get('totalPages') is not None else None,
+            downloadUrl=str(data['downloadUrl']) if data.get('downloadUrl') is not None else None,
+        )

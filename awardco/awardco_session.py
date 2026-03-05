@@ -1,7 +1,8 @@
 import json
 import logging
 import httpx
-from httpx import HTTPStatusError
+from httpx import HTTPStatusError, URL
+from typing import Callable, Any, Mapping
 
 
 async def raise_on_error(res: httpx.Response):
@@ -28,11 +29,11 @@ async def log_response(res: httpx.Response):
     logging.info(f"Response body: {res.text}")
 
 class AwardcoSession(httpx.AsyncClient):
-    def __init__(self, api_key: str, base_url: str = None, *args, **kwargs):
+    def __init__(self, api_key: str, base_url: URL | None = None, *args, **kwargs):
         transport = httpx.AsyncHTTPTransport(retries=3)
-        event_hooks = {
+        event_hooks: Mapping[str, list[Callable[..., Any]]] = {
             'response': [log_response, raise_on_error],
             'request': [log_request],
         }
-        super().__init__(base_url=base_url, transport=transport, event_hooks=event_hooks, *args, **kwargs)
+        super().__init__(base_url=base_url or URL(), transport=transport, event_hooks=event_hooks, *args, **kwargs)
         self.headers['apiKey'] = api_key
