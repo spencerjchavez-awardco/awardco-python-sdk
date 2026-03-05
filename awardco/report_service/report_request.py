@@ -1,4 +1,4 @@
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, field
 from datetime import datetime
 from .report_id import ReportId
 from .timezone import Timezone
@@ -36,7 +36,7 @@ class ReportRequest:
     endDate: datetime | None = None
     timeRangeOption: TimeRangeOption | None = None
     selectedColumns: list[str] | None = None
-    selectedFilters: ReportFilters | None = None
+    selectedFilters: ReportFilters = field(default_factory=ReportFilters)
     timezone: Timezone = None
     timeRangeDateColumns: list[str] | None = None  # TODO: TEST THIS
 
