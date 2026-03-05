@@ -1,3 +1,5 @@
+import logging
+
 from .report import Report
 from .report_request import ReportRequest
 from .report_status_response import ReportStatusResponse, ReportStatus
@@ -34,6 +36,7 @@ class ReportService:
             await asyncio.sleep(wait_time)
             status_res = await get_report_status(task_id)
             status = status_res.status
+            logging.info(f'Report status is {status.value} after {total_wait_time} secs')
             i += 1
 
         assert status_res is not None
