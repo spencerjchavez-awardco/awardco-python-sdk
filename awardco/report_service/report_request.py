@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, date
 from .report_id import ReportId
 from .timezone import Timezone
 from enum import Enum
@@ -32,8 +32,8 @@ class TimeRangeOption(Enum):
 @dataclass
 class ReportRequest:
     reportId: ReportId
-    startDate: datetime | None = None
-    endDate: datetime | None = None
+    startDate: datetime | date | None = None
+    endDate: datetime | date | None = None
     timeRangeOption: TimeRangeOption | None = None
     selectedColumns: list[str] | None = None
     selectedFilters: ReportFilters = field(default_factory=ReportFilters)
@@ -54,14 +54,20 @@ class ReportRequest:
         if to_metadata_filters is not None:
             filters_dict['To Metadata'] = to_metadata_filters
 
-        # Remove microseconds from startDate and endDate if present
-        start_date = self.startDate.replace(microsecond=0) if self.startDate else None
-        end_date = self.endDate.replace(microsecond=0) if self.endDate else None
+        def format_date(dt: datetime | date | None):
+            if isinstance(dt, datetime):
+                return dt.replace(microsecond=0).isoformat()
+            elif isinstance(dt, date):
+                return dt.strftime('%Y-%m-%d')
+            return ''
+
+        start_date = format_date(self.startDate)
+        end_date = format_date(self.endDate)
 
         request = {
             'reportId': self.reportId.value,
-            'startDate': start_date.isoformat() if start_date else '',
-            'endDate': end_date.isoformat() if end_date else '',
+            'startDate': start_date,
+            'endDate': end_date,
             'selectedColumns': self.selectedColumns if self.selectedColumns else [],
             'selectedFilters': filters_dict,
             'timezone': self.timezone.value if self.timezone else Timezone.UTC.value,
