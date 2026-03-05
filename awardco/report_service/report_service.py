@@ -7,6 +7,7 @@ from awardco.awardco_session import AwardcoSession
 import asyncio
 import math
 
+
 class ReportService:
     def __init__(self, session: AwardcoSession):
         self._session = session
@@ -20,7 +21,6 @@ class ReportService:
         res = await self._session.post(f"v2/reports/{report_request.reportId.value}",
                                        json=report_request.as_dict() | {'paginate': paginate},
                                        headers={'Accept': 'text/csv'})
-
         res = res.json()
         task_id = res['taskId']
         status_res = None
@@ -30,8 +30,8 @@ class ReportService:
         while status == ReportStatus.IN_PROGRESS:
             if total_wait_time >= max_wait_time_secs:
                 raise Exception(f'Report failed to generate after {total_wait_time} seconds')
-            wait_time = math.pow(2, i)
-            wait_time = max(wait_time, total_wait_time - max_wait_time_secs)
+            wait_time = min(math.pow(2, i), 90)  # cap wait time at 90 secs
+            wait_time = min(wait_time, max_wait_time_secs - total_wait_time)
             total_wait_time += wait_time
             await asyncio.sleep(wait_time)
             status_res = await get_report_status(task_id)
