@@ -7,9 +7,9 @@ from enum import Enum
 @dataclass
 class ReportFilters:
     filters: dict[str, list[str|None]] | None = None
-    metadataFilters: dict[str, list[str|None]] | None = None
-    toMetadataFilters: dict[str, list[str|None]] | None = None
-    fromMetadataFilters: dict[str, list[str|None]] | None = None
+    metadata_filters: dict[str, list[str|None]] | None = None
+    to_metadata_filters: dict[str, list[str|None]] | None = None
+    from_metadata_filters: dict[str, list[str|None]] | None = None
 
 @dataclass
 class TimeRangeOption(Enum):
@@ -31,20 +31,20 @@ class TimeRangeOption(Enum):
 
 @dataclass
 class ReportRequest:
-    reportId: ReportId
-    startDate: datetime | date | None = None
-    endDate: datetime | date | None = None
-    timeRangeOption: TimeRangeOption | None = None
-    selectedColumns: list[str] | None = None
-    selectedFilters: ReportFilters = field(default_factory=ReportFilters)
+    report_id: ReportId
+    start_date: datetime | date | None = None
+    end_date: datetime | date | None = None
+    time_range_option: TimeRangeOption | None = None
+    selected_columns: list[str] | None = None
+    selected_filters: ReportFilters = field(default_factory=ReportFilters)
     timezone: Timezone | None = None
-    timeRangeDateColumns: list[str] | None = None  # TODO: TEST THIS
+    time_range_date_columns: list[str] | None = None  # TODO: TEST THIS
 
-    def as_dict(self):
-        filters = self.selectedFilters.filters
-        from_metadata_filters = self.selectedFilters.fromMetadataFilters
-        to_metadata_filters = self.selectedFilters.toMetadataFilters
-        metadata_filters = self.selectedFilters.metadataFilters
+    def as_dict(self) -> dict:
+        filters = self.selected_filters.filters
+        from_metadata_filters = self.selected_filters.from_metadata_filters
+        to_metadata_filters = self.selected_filters.to_metadata_filters
+        metadata_filters = self.selected_filters.metadata_filters
 
         filters_dict: dict = dict(filters or {})
         if metadata_filters is not None:
@@ -61,18 +61,19 @@ class ReportRequest:
                 return dt.strftime('%Y-%m-%d')
             return ''
 
-        start_date = format_date(self.startDate)
-        end_date = format_date(self.endDate)
+        start_date = format_date(self.start_date)
+        end_date = format_date(self.end_date)
 
         request = {
-            'reportId': self.reportId.value,
+            'reportId': self.report_id.value,
             'startDate': start_date,
             'endDate': end_date,
-            'selectedColumns': self.selectedColumns if self.selectedColumns else [],
+            'selectedColumns': self.selected_columns if self.selected_columns else [],
             'selectedFilters': filters_dict,
             'timezone': self.timezone.value if self.timezone else Timezone.UTC.value,
-            'timeRangeOption': self.timeRangeOption.value if self.timeRangeOption is not None else ''
+            'timeRangeOption': self.time_range_option.value if self.time_range_option is not None else None,
+            'timeRangeDateColumns': self.time_range_date_columns,
         }
-        request = {k:v for k, v in request.items() if v != ''}
-
+        request = {k:v for k, v in request.items() if v is not None and v != ''}
         return request
+

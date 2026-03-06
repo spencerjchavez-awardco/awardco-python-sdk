@@ -18,7 +18,7 @@ class ReportService:
             res = res.json()
             return ReportStatusResponse.from_dict(res)
 
-        res = await self._session.post(f"v2/reports/{report_request.reportId.value}",
+        res = await self._session.post(f"v2/reports/{report_request.report_id.value}",
                                        json=report_request.as_dict() | {'paginate': paginate},
                                        headers={'Accept': 'text/csv'})
         res = res.json()
