@@ -30,7 +30,7 @@ class ReportService:
         while status == ReportStatus.IN_PROGRESS:
             if total_wait_time >= max_wait_time_secs:
                 raise Exception(f'Report failed to generate after {total_wait_time} seconds')
-            wait_time = min(math.pow(2, i), 90)  # cap wait time at 90 secs
+            wait_time = min(math.pow(2, i), 30)  # cap wait time interval to 30 secs
             wait_time = min(wait_time, max_wait_time_secs - total_wait_time)
             total_wait_time += wait_time
             await asyncio.sleep(wait_time)
