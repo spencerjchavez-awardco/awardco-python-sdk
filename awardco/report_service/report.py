@@ -7,10 +7,11 @@ from awardco.awardco_session import AwardcoSession
 
 class Report:
 
-    def __init__(self, csv_download_url: str, total_pages: int, awardco_session: AwardcoSession):
+    def __init__(self, csv_download_url: str, total_pages: int, task_id: int, awardco_session: AwardcoSession):
         self._download_url = csv_download_url
         self._total_pages = total_pages
         self._awardco_session = awardco_session
+        self._task_id = task_id
 
     async def iter_rows(self) -> AsyncGenerator[dict[str, str], None]:
         async def get_report_page_as_csv(url, page) -> str:

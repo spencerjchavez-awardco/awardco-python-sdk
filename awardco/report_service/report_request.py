@@ -61,6 +61,10 @@ class ReportRequest:
                 return dt.strftime('%Y-%m-%d')
             return ''
 
+        selected_columns = self.selected_columns
+        if selected_columns is not None and len(selected_columns) == 0:
+            selected_columns = None
+
         start_date = format_date(self.start_date)
         end_date = format_date(self.end_date)
 
@@ -68,7 +72,7 @@ class ReportRequest:
             'reportId': self.report_id.value,
             'startDate': start_date,
             'endDate': end_date,
-            'selectedColumns': self.selected_columns if self.selected_columns else [],
+            'selectedColumns': selected_columns,
             'selectedFilters': filters_dict,
             'timezone': self.timezone.value if self.timezone else Timezone.UTC.value,
             'timeRangeOption': self.time_range_option.value if self.time_range_option is not None else None,
