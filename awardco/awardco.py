@@ -6,10 +6,12 @@ from .awardco_session import AwardcoSession
 
 class Awardco:
 
-    def __init__(self, api_key: str = '', base_url='https://api.awardco.com/api/'):
+    def __init__(self, api_key: str = '', base_url='https://api.awardco.com/api/', *args_async_client, **kwargs_async_client):
         self.session = AwardcoSession(
             api_key=api_key,
             base_url=URL(base_url),
+            *args_async_client,
+            **kwargs_async_client,
         )
         self.report_service = ReportService(self.session)
         self.recognition_service = RecognitionService(self.session)
