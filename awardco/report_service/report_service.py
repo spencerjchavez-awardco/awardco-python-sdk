@@ -56,3 +56,4 @@ class ReportService:
         task_id = report_status.taskId
         assert download_url and total_pages is not None and total_pages > 0
         return Report(download_url, total_pages, task_id, self._session)
+
