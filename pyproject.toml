@@ -16,5 +16,8 @@ dependencies = [
 [tool.setuptools.packages.find]
 include = ["awardco*"]
 
+[tool.setuptools.package-data]
+awardco = ["py.typed"]
+
 [tool.mypy]
 disable_error_code=["misc"]
