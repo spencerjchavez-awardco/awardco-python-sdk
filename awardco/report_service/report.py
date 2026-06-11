@@ -4,6 +4,7 @@ from typing import AsyncGenerator
 import asyncio
 
 from awardco.awardco_session import AwardcoSession
+from awardco.utils import wrap_async
 
 class Report:
 
@@ -16,7 +17,7 @@ class Report:
     # TODO: Add a key() function that returns only the report keys.
     # TODO: When requesting large timeframes, automatically split them into smaller ones to prevent Awardco API failures?
 
-    async def iter_rows(self) -> AsyncGenerator[dict[str, str], None]:
+    async def iter_rows_async(self) -> AsyncGenerator[dict[str, str], None]:
         async def get_report_page_as_csv(url, page) -> str:
             res = await self._awardco_session.get(url, params={'page': page})
             assert res.headers['content-type'] == 'text/csv', 'Report required to be in CSV format.'
@@ -29,8 +30,11 @@ class Report:
             for row in reader:
                 yield row
 
-    async def all_rows(self) -> list[dict[str,str]]:
+    async def all_rows_async(self) -> list[dict[str,str]]:
         rows = []
-        async for row in self.iter_rows():  # Speed could be improved by fetching each row on a separate thread
+        async for row in self.iter_rows_async():  # Speed could be improved by fetching each row on a separate thread
             rows.append(row)
         return rows
+
+    def all_rows(self) -> list[dict[str, str]]:
+        return wrap_async(self.all_rows_async())
