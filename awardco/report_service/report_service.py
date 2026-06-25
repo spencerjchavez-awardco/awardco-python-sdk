@@ -8,6 +8,8 @@ from awardco.utils import wrap_async
 import asyncio
 import math
 
+logger = logging.getLogger(__name__)
+
 
 class ReportService:
     def __init__(self, session: AwardcoSession):
@@ -37,7 +39,7 @@ class ReportService:
             await asyncio.sleep(wait_time)
             status_res = await get_report_status(task_id)
             status = status_res.status
-            logging.info(f'Report status is {status.value} after {total_wait_time} secs')
+            logger.info("Report status is %s after %s secs", status.value, total_wait_time)
             i += 1
 
         assert status_res is not None
