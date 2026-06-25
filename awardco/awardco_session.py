@@ -4,6 +4,8 @@ import httpx
 from httpx import HTTPStatusError, URL
 from typing import Callable, Any, Mapping
 
+logger = logging.getLogger(__name__)
+
 
 async def raise_on_error(res: httpx.Response):
     await res.aread()
@@ -15,18 +17,18 @@ async def raise_on_error(res: httpx.Response):
 
 async def log_request(request: httpx.Request):
     await request.aread()
-    logging.info(f"Request URL: {request.method}: {request.url}")
+    logger.info("Request: %s %s", request.method, request.url)
     body = request.content.decode()
     if body:
         try:
-            logging.info(f"Request body: {json.dumps(json.loads(body), indent=2)}")
+            logger.debug("Request body: %s", json.dumps(json.loads(body), indent=2))
         except json.decoder.JSONDecodeError:
-            logging.info(f'Request body: {body}')
+            logger.debug("Request body: %s", body)
 
 async def log_response(res: httpx.Response):
     await res.aread()
-    logging.info(f"Status Code: {res.status_code} from {res.request.method}: {res.request.url}")
-    logging.info(f"Response body: {res.text}")
+    logger.info("Response: %s %s %s", res.status_code, res.request.method, res.request.url)
+    logger.debug("Response body: %s", res.text)
 
 class AwardcoSession(httpx.AsyncClient):
     def __init__(self, api_key: str, base_url: URL | None = None, *args, **kwargs):
