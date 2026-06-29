@@ -1,7 +1,6 @@
 from io import StringIO
 from csv import DictReader
 from typing import AsyncGenerator
-import asyncio
 
 from awardco.awardco_session import AwardcoSession
 from awardco.utils import wrap_async

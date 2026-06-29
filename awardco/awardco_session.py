@@ -18,17 +18,10 @@ async def raise_on_error(res: httpx.Response):
 async def log_request(request: httpx.Request):
     await request.aread()
     logger.info("Request: %s %s", request.method, request.url)
-    body = request.content.decode()
-    if body:
-        try:
-            logger.debug("Request body: %s", json.dumps(json.loads(body), indent=2))
-        except json.decoder.JSONDecodeError:
-            logger.debug("Request body: %s", body)
 
 async def log_response(res: httpx.Response):
     await res.aread()
     logger.info("Response: %s %s %s", res.status_code, res.request.method, res.request.url)
-    logger.debug("Response body: %s", res.text)
 
 class AwardcoSession(httpx.AsyncClient):
     def __init__(self, api_key: str, base_url: URL | None = None, *args, **kwargs):
