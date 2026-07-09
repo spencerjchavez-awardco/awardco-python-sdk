@@ -16,18 +16,24 @@ class Report:
     # TODO: Add a key() function that returns only the report keys.
     # TODO: When requesting large timeframes, automatically split them into smaller ones to prevent Awardco API failures?
 
-    async def iter_rows_async(self) -> AsyncGenerator[dict[str, str], None]:
-        async def get_report_page_as_csv(url, page) -> str:
-            res = await self._awardco_session.get(url, params={'page': page})
-            assert res.headers['content-type'] == 'text/csv', 'Report required to be in CSV format.'
-            csv_text = res.text.strip('\ufeff')
-            return csv_text
+    async def get_report_page_as_csv(self, page) -> str:
+        res = await self._awardco_session.get(self._download_url, params={'page': page})
+        assert res.headers['content-type'] == 'text/csv', 'Report required to be in CSV format.'
+        csv_text = res.text.strip('\ufeff')
+        return csv_text
 
+    async def iter_rows_async(self) -> AsyncGenerator[dict[str, str], None]:
         for i in range(self._total_pages):
-            report_csv = await get_report_page_as_csv(self._download_url, i + 1)
+            report_csv = await self.get_report_page_as_csv(i + 1)
             reader = DictReader(StringIO(report_csv))
             for row in reader:
                 yield row
+
+    async def iter_pages_async(self) -> AsyncGenerator[list[dict[str, str]], None]:
+        for i in range(self._total_pages):
+            report_csv = await self.get_report_page_as_csv(i + 1)
+            reader = DictReader(StringIO(report_csv))
+            yield list(reader)
 
     async def all_rows_async(self) -> list[dict[str,str]]:
         rows = []
