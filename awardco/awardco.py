@@ -1,6 +1,6 @@
 from httpx import URL
 
-from .recognition_service.recognition_service import RecognitionService
+from .recognition_service import RecognitionService
 from .report_service import ReportService
 from .awardco_session import AwardcoSession
 

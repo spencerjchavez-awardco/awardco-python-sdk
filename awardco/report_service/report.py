@@ -2,8 +2,8 @@ from io import StringIO
 from csv import DictReader
 from typing import AsyncGenerator
 
-from awardco.awardco_session import AwardcoSession
-from awardco.utils import wrap_async
+from ..awardco_session import AwardcoSession
+from ..utils import wrap_async
 
 class Report:
 

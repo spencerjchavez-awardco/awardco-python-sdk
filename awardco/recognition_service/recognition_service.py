@@ -1,8 +1,8 @@
 from io import StringIO
 
 from .bulk_recognition import BulkRecognition
-from awardco.awardco_session import AwardcoSession
-from awardco.utils import wrap_async
+from ..awardco_session import AwardcoSession
+from ..utils import wrap_async
 from csv import DictWriter
 
 class RecognitionService:
