@@ -3,8 +3,8 @@ import logging
 from .report import Report
 from .report_request import ReportRequest
 from .report_status_response import ReportStatusResponse, ReportStatus
-from awardco.awardco_session import AwardcoSession
-from awardco.utils import wrap_async
+from ..awardco_session import AwardcoSession
+from ..utils import wrap_async
 import asyncio
 import math
 

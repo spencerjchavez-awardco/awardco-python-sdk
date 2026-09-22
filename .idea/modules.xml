@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/AwardcoSDK.iml" filepath="$PROJECT_DIR$/.idea/AwardcoSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/awardco.iml" filepath="$PROJECT_DIR$/.idea/awardco.iml" />
     </modules>
   </component>
 </project>
